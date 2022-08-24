@@ -237,7 +237,7 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 }
 
 // MARK: - PaymentSheetAuthenticationContext
-extension BottomSheetViewController: PaymentSheetAuthenticationContext,BottomSheet3DS2ViewControllerDelegate {
+extension BottomSheetViewController: PaymentSheetAuthenticationContext {
     
     func authenticationPresentingViewController() -> UIViewController {
         return self
@@ -262,6 +262,7 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext,BottomShe
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
             challengeViewController: threeDS2ChallengeViewController, appearance: appearance, isTestMode: isTestMode)
+        
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
         completion()
@@ -300,7 +301,7 @@ extension BottomSheetViewController: UIGestureRecognizerDelegate {
 }
 
 // MARK: - BottomSheet3DS2ViewControllerDelegate
-@available(iOSApplicationExtension, unavailable)
+//@available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension BottomSheetViewController: BottomSheet3DS2ViewControllerDelegate {
     func bottomSheet3DS2ViewControllerDidCancel(
