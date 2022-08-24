@@ -76,7 +76,6 @@ import UIKit
     }
 
     /// The content layer to use on iOS >= 12. This layer resembles a spiraling comet.
-    @available(iOS 12.0, *)
     private lazy var cometLayer: CAGradientLayer = {
         let shape = CAShapeLayer()
         shape.path = makeArcPath(radius: radius, startAngle: 0.05, endAngle: 0.95)
@@ -86,7 +85,12 @@ import UIKit
         shape.fillColor = UIColor.clear.cgColor
 
         let gradientLayer = CAGradientLayer()
-        gradientLayer.type = .conic // Conic gradient requires iOS >= 12.0
+        // Conic gradient requires iOS >= 12.0
+        if #available(iOS 12.0, *) {
+            gradientLayer.type = .conic
+        } else {
+            // Fallback on earlier versions
+        }
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
         gradientLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)

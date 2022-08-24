@@ -1404,21 +1404,6 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         return false
     }
 
-    // MARK: - SFSafariViewControllerDelegate
-    /// :nodoc:
-    @objc
-    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        let context = currentAction?.authenticationContext
-        if context?.responds(
-            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false
-        {
-            context?.authenticationContextWillDismiss?(controller)
-        }
-        safariViewController = nil
-        STPURLCallbackHandler.shared().unregisterListener(self)
-        _retrieveAndCheckIntentForCurrentAction()
-    }
-
     // This is only called after web-redirects because native 3DS2 cancels go directly
     // to the ACS
     func _markChallengeCanceled(withCompletion completion: @escaping STPBooleanSuccessBlock) {
@@ -1610,6 +1595,25 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         return NSError(
             domain: STPPaymentHandler.errorDomain, code: errorCode.rawValue,
             userInfo: userInfo as? [String: Any])
+    }
+}
+
+@available(iOSApplicationExtension, unavailable)
+extension STPPaymentHandler {
+    // MARK: - SFSafariViewControllerDelegate
+    /// :nodoc:
+    @objc
+    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        let context = currentAction?.authenticationContext
+        if context?.responds(
+            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false
+        {
+            context?.authenticationContextWillDismiss?(controller)
+        }
+        safariViewController = nil
+        STPURLCallbackHandler.shared().unregisterListener(self)
+        
+        _retrieveAndCheckIntentForCurrentAction()
     }
 }
 

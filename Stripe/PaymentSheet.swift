@@ -398,9 +398,9 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
 
 // MARK: - Link
 
-private extension PaymentSheet {
+extension PaymentSheet: PayWithLinkViewControllerDelegate {
 
-    func presentPayWithLinkController(
+    private func presentPayWithLinkController(
         from presentingController: UIViewController,
         linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
@@ -426,7 +426,7 @@ private extension PaymentSheet {
         presentingController.present(payWithLinkVC, animated: true, completion: completion)
     }
 
-    func verifyLinkSessionIfNeeded(
+    private func verifyLinkSessionIfNeeded(
         with paymentOption: PaymentOption,
         intent: Intent,
         completion: ((Bool) -> Void)? = nil

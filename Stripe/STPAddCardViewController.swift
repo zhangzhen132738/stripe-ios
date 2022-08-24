@@ -129,8 +129,9 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     private weak var cardImageView: UIImageView?
     private var doneItem: UIBarButtonItem?
     private var cardHeaderView: STPSectionHeaderView?
-    @available(iOS 13, macCatalyst 14, *)
-    private lazy var cardScanner: STPCardScanner? = nil
+//    @available(iOS 13, macCatalyst 14, *)
+    //STPCardScanner
+    private lazy var cardScanner: Any? = nil
     @available(macCatalyst 14, *)
     private lazy var scannerCell: STPCardScannerTableViewCell? = nil
 
@@ -370,6 +371,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         if #available(iOS 13.0, macCatalyst 14.0, *) {
             view.endEditing(true)
             isScanning = true
+            let cardScanner = self.cardScanner as? STPCardScanner
             cardScanner?.start()
         }
     }
@@ -567,6 +569,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     @objc
     public func paymentCardTextFieldDidBeginEditing(_ textField: STPPaymentCardTextField) {
         if #available(iOS 13.0, macCatalyst 14.0, *) {
+            let cardScanner = self.cardScanner as? STPCardScanner
             cardScanner?.stop()
         }
     }
@@ -741,6 +744,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     ) {
         super.viewWillTransition(to: size, with: coordinator)
         if #available(iOS 13.0, macCatalyst 14.0, *) {
+            let cardScanner = self.cardScanner as? STPCardScanner
             let orientation = UIDevice.current.orientation
             if orientation.isPortrait || orientation.isLandscape {
                 cardScanner?.deviceOrientation = orientation

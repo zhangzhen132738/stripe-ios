@@ -34,6 +34,7 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation {
         didSet {
             if #available(iOS 13.0, macCatalyst 14.0, *) {
+                let cardScanningView = self.cardScanningView as? CardScanningView
                 cardScanningView?.deviceOrientation = deviceOrientation
             }
         }
@@ -87,21 +88,25 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
         }
     }
 
-    @available(iOS 13, macCatalyst 14, *)
-    lazy var cardScanningView: CardScanningView? = {
-        if !STPCardScanner.cardScanningAvailable() {
-            return nil  // Don't initialize the scanner
+    //CardScanningView
+    lazy var cardScanningView: UIView? = {
+        if #available(iOS 13, macCatalyst 14.0, *) {
+            if !STPCardScanner.cardScanningAvailable() {
+                return nil  // Don't initialize the scanner
+            }
+            let scanningView = CardScanningView()
+            scanningView.alpha = 0
+            scanningView.isHidden = true
+            return scanningView
         }
-        let scanningView = CardScanningView()
-        scanningView.alpha = 0
-        scanningView.isHidden = true
-        return scanningView
+        return nil
     }()
 
     weak var lastScanButton: UIButton?
     @objc func scanButtonTapped(_ button: UIButton) {
         if #available(iOS 13.0, macCatalyst 14.0, *) {
             lastScanButton = button
+            let cardScanningView = self.cardScanningView as? CardScanningView
             if let cardScanningView = cardScanningView {
                 button.isUserInteractionEnabled = false
                 UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
@@ -146,7 +151,8 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
         var cardScanningPlaceholderView = UIView()
         // Card scanning button
         if #available(iOS 13.0, macCatalyst 14.0, *) {
-            if let cardScanningView = self.cardScanningView {
+            let cardScanningView = self.cardScanningView as? CardScanningView
+            if let cardScanningView = cardScanningView {
                 cardScanningView.delegate = self
                 cardScanningPlaceholderView = cardScanningView
             }
@@ -236,6 +242,7 @@ extension CardDetailsEditView: STPFormViewInternalDelegate {
 
     func formViewWillBecomeFirstResponder(_ form: STPFormView) {
         if #available(iOS 13, macCatalyst 14, *) {
+            let cardScanningView = self.cardScanningView as? CardScanningView
             cardScanningView?.stop()
         }
     }
